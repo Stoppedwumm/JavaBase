@@ -407,186 +407,8 @@ public @interface Game {
 
             <h3>Full Source Code / Vollständiger Quellcode</h3>
 
-            <pre><code class="language-java">package my.project;
-
-import engine.annot.Game;
-import engine.core.CoreGame;
-import engine.input.Input;
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
-
-@Game(name = "Turtle Doom")
-public class DoomGame extends CoreGame {
-
-    // --- Constants ---
-    private final int RES_SCALE = 4; // Higher = Blockier/Faster
-    private int RENDER_W;
-    private int RENDER_H;
-    
-    // --- State ---
-    private enum State { LOADING, PLAYING }
-    private State state = State.LOADING;
-    private String loadingStatus = "Initializing...";
-
-    // --- Assets ---
-    private BufferedImage gunSprite;
-    private Color[][] gunPixelMap;
-    private int gunW, gunH;
-    private boolean assetsLoaded = false;
-
-    // --- World Map (1=Wall, 0=Empty) ---
-    private final int[][] worldMap = {
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-    };
-
-    // --- Player / Camera ---
-    private double posX = 3.5, posY = 3.5;
-    private double dirX = -1, dirY = 0;
-    private double planeX = 0, planeY = 0.66; // FOV
-
-    @Override
-    public void start() {
-        RENDER_W = getScreenWidth() / RES_SCALE;
-        RENDER_H = getScreenHeight();
-        new Thread(this::loadAssets).start();
-    }
-
-    private void loadAssets() {
-        try {
-            loadingStatus = "Loading Assets...";
-            // Example: Loading a sprite from URL or Local
-            // For tutorial brevity, we generate simple colors or use placeholders
-            generateProceduralGun();
-            assetsLoaded = true;
-            state = State.PLAYING;
-        } catch (Exception e) { e.printStackTrace(); }
-    }
-
-    private void generateProceduralGun() {
-        gunW = 60; gunH = 100;
-        gunPixelMap = new Color[gunW][gunH];
-        for(int x=0; x<gunW; x++) {
-            for(int y=0; y<gunH; y++) {
-                gunPixelMap[x][y] = Color.DARK_GRAY;
-            }
-        }
-    }
-
-    @Override
-    public void input(Input input) {
-        if (state != State.PLAYING) return;
-        double moveSpeed = 0.08;
-        double rotSpeed = 0.05;
-
-        // Rotation
-        if (input.isLeft()) {
-            double oldDirX = dirX;
-            dirX = dirX * Math.cos(rotSpeed) - dirY * Math.sin(rotSpeed);
-            dirY = oldDirX * Math.sin(rotSpeed) + dirY * Math.cos(rotSpeed);
-            double oldPlaneX = planeX;
-            planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
-            planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
-        }
-        if (input.isRight()) {
-            double oldDirX = dirX;
-            dirX = dirX * Math.cos(-rotSpeed) - dirY * Math.sin(-rotSpeed);
-            dirY = oldDirX * Math.sin(-rotSpeed) + dirY * Math.cos(-rotSpeed);
-            double oldPlaneX = planeX;
-            planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
-            planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
-        }
-
-        // Movement
-        if (input.isUp() || input.isKey(87)) { // W
-            if(worldMap[(int)posY][(int)(posX + dirX * moveSpeed)] == 0) posX += dirX * moveSpeed;
-            if(worldMap[(int)(posY + dirY * moveSpeed)][(int)posX] == 0) posY += dirY * moveSpeed;
-        }
-        if (input.isDown() || input.isKey(83)) { // S
-            if(worldMap[(int)posY][(int)(posX - dirX * moveSpeed)] == 0) posX -= dirX * moveSpeed;
-            if(worldMap[(int)(posY - dirY * moveSpeed)][(int)posX] == 0) posY -= dirY * moveSpeed;
-        }
-    }
-
-    @Override
-    public void draw() {
-        clear();
-        if (state == State.LOADING) {
-            drawText(loadingStatus, -100, 0, 3, Color.WHITE);
-            return;
-        }
-        
-        // Raycasting Algorithm
-        for (int x = 0; x < RENDER_W; x++) {
-            double cameraX = 2 * x / (double)RENDER_W - 1; 
-            double rayDirX = dirX + planeX * cameraX;
-            double rayDirY = dirY + planeY * cameraX;
-
-            int mapX = (int) posX;
-            int mapY = (int) posY;
-
-            double sideDistX, sideDistY;
-            double deltaDistX = (rayDirX == 0) ? 1e30 : Math.abs(1 / rayDirX);
-            double deltaDistY = (rayDirY == 0) ? 1e30 : Math.abs(1 / rayDirY);
-            double perpWallDist;
-
-            int stepX, stepY;
-            int hit = 0, side = 0;
-
-            // Calculate Step and SideDist
-            if (rayDirX < 0) { stepX = -1; sideDistX = (posX - mapX) * deltaDistX; }
-            else             { stepX = 1;  sideDistX = (mapX + 1.0 - posX) * deltaDistX; }
-            if (rayDirY < 0) { stepY = -1; sideDistY = (posY - mapY) * deltaDistY; }
-            else             { stepY = 1;  sideDistY = (mapY + 1.0 - posY) * deltaDistY; }
-
-            // DDA
-            while (hit == 0) {
-                if (sideDistX < sideDistY) { sideDistX += deltaDistX; mapX += stepX; side = 0; }
-                else                       { sideDistY += deltaDistY; mapY += stepY; side = 1; }
-                
-                if (mapY >= 0 && mapY < worldMap.length && mapX >= 0 && mapX < worldMap[0].length) {
-                    if (worldMap[mapY][mapX] > 0) hit = 1;
-                } else { hit = 1; }
-            }
-
-            if (side == 0) perpWallDist = (sideDistX - deltaDistX);
-            else           perpWallDist = (sideDistY - deltaDistY);
-
-            // Draw Wall Strip
-            int lineHeight = (int) (RENDER_H / perpWallDist);
-            int drawStart = -lineHeight / 2 + RENDER_H / 2;
-            int drawEnd = lineHeight / 2 + RENDER_H / 2;
-            
-            Color color = (side == 1) ? new Color(150, 0, 0) : new Color(255, 0, 0);
-            
-            // Draw Vertical Line using Turtle
-            // Convert screenspace to Turtle space (-400 to 400)
-            int screenX = x * RES_SCALE;
-            for(int w=0; w<RES_SCALE; w++) {
-                penUp(); moveTo((screenX + w) - 400, drawStart - 300);
-                penDown(); color(color);
-                moveTo((screenX + w) - 400, drawEnd - 300);
-            }
-        }
-        drawGun();
-    }
-    
-    // Helper methods for Gun and Text omitted for brevity (see full implementation above)
-    // Hilfsmethoden für Waffe und Text hier gekürzt (siehe vollständige Implementierung oben)
-    private void drawGun() { /* ... */ }
-    private void drawText(String s, int x, int y, int scale, Color c) { /* ... */ }
-}</code></pre>
-
-            <h3 class="lang-en">Utility: Loading Images</h3>
-            <h3 class="lang-de">Utility: Bilder laden</h3>
-            <pre><code class="language-java">package my.project.utils; 
+            <pre><code class="language-java">
+package my.project.utils; // Ensure this matches your folder structure
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -595,23 +417,76 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Image {
+
     /**
-     * Loads an image from resources and returns a Color array.
+     * Loads an image from the resources folder and converts it into a 2D array of Colors.
      */
     public static Color[][] loadPixelMap(String resourcePath) throws IOException {
+        // FIX: Changed "ImageUtils.class" to "Image.class" to match your file name
         InputStream is = Image.class.getResourceAsStream(resourcePath);
-        if (is == null) throw new IOException("Resource not found: " + resourcePath);
+        
+        if (is == null) {
+            throw new IOException("File not found in resources: " + resourcePath);
+        }
 
         BufferedImage image = ImageIO.read(is);
         int width = image.getWidth();
         int height = image.getHeight();
+
         Color[][] pixelMap = new Color[width][height];
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                pixelMap[x][y] = new Color(image.getRGB(x, y), true);
+                int pixel = image.getRGB(x, y);
+                // The 'true' argument tells Java to support transparency (Alpha channel)
+                pixelMap[x][y] = new Color(pixel, true);
             }
         }
+
+        return pixelMap;
+    }
+}
+            </code></pre>
+
+            <h3 class="lang-en">Utility: Loading Images</h3>
+            <h3 class="lang-de">Utility: Bilder laden</h3>
+            <pre><code class="language-java">package my.project.utils; 
+
+package my.project.utils; // Ensure this matches your folder structure
+
+import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class Image {
+
+    /**
+     * Loads an image from the resources folder and converts it into a 2D array of Colors.
+     */
+    public static Color[][] loadPixelMap(String resourcePath) throws IOException {
+        // FIX: Changed "ImageUtils.class" to "Image.class" to match your file name
+        InputStream is = Image.class.getResourceAsStream(resourcePath);
+        
+        if (is == null) {
+            throw new IOException("File not found in resources: " + resourcePath);
+        }
+
+        BufferedImage image = ImageIO.read(is);
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        Color[][] pixelMap = new Color[width][height];
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int pixel = image.getRGB(x, y);
+                // The 'true' argument tells Java to support transparency (Alpha channel)
+                pixelMap[x][y] = new Color(pixel, true);
+            }
+        }
+
         return pixelMap;
     }
 }</code></pre>
