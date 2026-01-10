@@ -13,8 +13,27 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * Engine loader that discovers and initializes game classes.
+ * 
+ * Scans the classpath (whether running from IDE or JAR) to find classes annotated with {@link Game}.
+ * Validates that the class extends {@link CoreGame} and instantiates it.
+ */
 public class Init {
+    /**
+     * Creates a new Init instance.
+     * This class is not meant to be instantiated; use {@link #main(String[])} instead.
+     */
+    public Init() { }
 
+    /**
+     * Main entry point for the engine loader.
+     * 
+     * Scans all classes in the application, finds the first class annotated with {@code @Game}
+     * that extends {@link CoreGame}, and starts the game engine.
+     * 
+     * @param args command-line arguments (currently unused)
+     */
     public static void main(String[] args) {
         System.out.println("--- Engine Loader Starting ---");
 
@@ -71,7 +90,11 @@ public class Init {
     }
 
     /**
-     * Smart scanner that determines if we are running from a Directory (IDE) or a JAR (Release)
+     * Scans the classpath to find all loadable classes.
+     * Handles both directory (IDE) and JAR (Release) execution modes.
+     * 
+     * @return a list of all discovered classes
+     * @throws Exception if class loading fails
      */
     private static List<Class<?>> getAllClasses() throws Exception {
         List<Class<?>> classes = new ArrayList<>();
@@ -100,7 +123,11 @@ public class Init {
     }
 
     /**
-     * Recursively scans directories for .class files (IDE Mode)
+     * Recursively scans a directory for .class files (IDE Mode).
+     * 
+     * @param directory the directory to scan
+     * @param packageName the current package name
+     * @param classes the list to accumulate discovered classes
      */
     private static void scanDirectory(File directory, String packageName, List<Class<?>> classes) {
         if (!directory.exists()) return;
@@ -126,7 +153,11 @@ public class Init {
     }
 
     /**
-     * Scans entries inside a JAR file (Release Mode)
+     * Scans all entries inside a JAR file (Release Mode).
+     * 
+     * @param jarFile the JAR file to scan
+     * @param classes the list to accumulate discovered classes
+     * @throws Exception if JAR reading fails
      */
     private static void scanJar(File jarFile, List<Class<?>> classes) throws Exception {
         try (JarFile jar = new JarFile(jarFile)) {
