@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaBase Engine Documentation</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --sidebar-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-color: #00bcd4;
+            --secondary-accent: #ff4081;
+            --code-bg: #282c34;
+            --border-color: #333;
+            --heading-color: #ffffff;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f4f4f4;
+            --sidebar-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #00796b;
+            --secondary-accent: #d81b60;
+            --code-bg: #eaeaea;
+            --border-color: #ddd;
+            --heading-color: #111;
+        }
+
+        * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        nav {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        nav h1 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(0, 188, 212, 0.1);
+            color: var(--accent-color);
+        }
+
+        nav .separator {
+            margin: 20px 0 10px 0;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #777;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        main {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .controls button {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .controls button:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* Typography */
+        h1, h2, h3 { color: var(--heading-color); }
+        h2 { margin-top: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        p { line-height: 1.6; }
+        a { color: var(--accent-color); }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            background: rgba(255, 64, 129, 0.2);
+            color: var(--secondary-accent);
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Classes Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--sidebar-bg);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th { background-color: rgba(255,255,255,0.05); color: var(--accent-color); }
+
+        /* Tutorial Section */
+        .tutorial-header {
+            background: linear-gradient(45deg, #b71c1c, #d32f2f);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 60px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .tutorial-header h2 {
+            border: none;
+            color: white;
+            margin: 0;
+        }
+
+        /* Utility */
+        .hidden { display: none; }
+        
+        /* Language handling */
+        .lang-de { display: none; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>JavaBase <span style="font-size:0.6em; opacity:0.7;">v1.0</span></h1>
+        
+        <div class="lang-en separator">Documentation</div>
+        <div class="lang-de separator">Dokumentation</div>
+        
+        <a href="#intro" class="active" onclick="setActive(this)">Introduction</a>
+        <a href="#core" onclick="setActive(this)">Core Engine</a>
+        <a href="#input" onclick="setActive(this)">Input System</a>
+        <a href="#loader" onclick="setActive(this)">Loader (Init)</a>
+        
+        <div class="lang-en separator">Tutorials</div>
+        <div class="lang-de separator">Tutorials</div>
+        
+        <a href="#doom-tutorial" style="color: var(--secondary-accent);" onclick="setActive(this)">BUILD DOOM</a>
+    </nav>
+
+    <main>
+        <header>
+            <div class="lang-en">
+                <h1>JavaBase API</h1>
+                <p>A lightweight, turtle-graphics based game engine for Java.</p>
+            </div>
+            <div class="lang-de">
+                <h1>JavaBase API</h1>
+                <p>Eine leichtgewichtige, Turtle-Grafik basierte Spiele-Engine für Java.</p>
+            </div>
+
+            <div class="controls">
+                <button onclick="toggleLang()">EN / DE</button>
+                <button onclick="toggleTheme()">☀ / ☾</button>
+            </div>
+        </header>
+
+        <!-- INTRODUCTION -->
+        <section id="intro">
+            <h2 class="lang-en">Getting Started</h2>
+            <h2 class="lang-de">Erste Schritte</h2>
+
+            <div class="lang-en">
+                <p>JavaBase is a minimal framework wrapping Swing and AWT to create a game loop and provide simple drawing commands. It combines standard canvas rendering with "Turtle Graphics" commands (move, pen down, etc.).</p>
+                <p>To start a new project, clone the template:</p>
+            </div>
+            <div class="lang-de">
+                <p>JavaBase ist ein minimales Framework, das Swing und AWT kapselt, um einen Game-Loop zu erstellen und einfache Zeichenbefehle bereitzustellen. Es kombiniert Standard-Canvas-Rendering mit "Turtle-Grafik"-Befehlen (Bewegen, Stift runter, etc.).</p>
+                <p>Um ein neues Projekt zu starten, klonen Sie das Template:</p>
+            </div>
+
+            <pre><code class="language-bash">git clone https://github.com/Stoppedwumm/JavaBaseTemplate</code></pre>
+            
+            <p>
+                <span class="lang-en">Modify the entry point at:</span>
+                <span class="lang-de">Bearbeiten Sie den Einstiegspunkt unter:</span> 
+                <span class="badge">app/src/main/java/example/project/NeonDodger.java</span>
+            </p>
+        </section>
+
+        <!-- CORE GAME -->
+        <section id="core">
+            <h2>package engine.core</h2>
+            <h3>public abstract class CoreGame</h3>
+            
+            <div class="lang-en">
+                <p>The heart of the engine. Your game class must extend this.</p>
+            </div>
+            <div class="lang-de">
+                <p>Das Herz der Engine. Ihre Spielklasse muss von dieser Klasse erben.</p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th class="lang-en">Method</th>
+                        <th class="lang-de">Methode</th>
+                        <th class="lang-en">Description</th>
+                        <th class="lang-de">Beschreibung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>start()</code></td>
+                        <td><span class="lang-en">Called once on initialization.</span><span class="lang-de">Wird einmalig bei der Initialisierung aufgerufen.</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>draw()</code></td>
+                        <td><span class="lang-en">Called every frame (60 FPS). Use Turtle commands here.</span><span class="lang-de">Wird jeden Frame aufgerufen (60 FPS). Nutzen Sie hier Turtle-Befehle.</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>input(Input in)</code></td>
+                        <td><span class="lang-en">Handle logic and key/mouse events.</span><span class="lang-de">Verarbeitung von Logik und Tasten-/Maus-Events.</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>moveTo(x, y)</code></td>
+                        <td><span class="lang-en">Moves the turtle. Draws line if pen is down.</span><span class="lang-de">Bewegt die Turtle. Zeichnet Linie, wenn Stift unten.</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>fill()</code></td>
+                        <td><span class="lang-en">Flood fills the area starting from turtle position.</span><span class="lang-de">Füllt den Bereich ausgehend von der Turtle-Position (Flood Fill).</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <pre><code class="language-java">package engine.core;
+// ... imports omitted for brevity ...
+
+public abstract class CoreGame extends Canvas {
+    // Engine State
+    private double turtleX = 0, turtleY = 0;
+    
+    // Abstract Methods to implement
+    public abstract void start();
+    public abstract void draw();
+    public abstract void input(Input input);
+
+    // See full source code in project...
+}</code></pre>
+        </section>
+
+        <!-- INPUT -->
+        <section id="input">
+            <h2>package engine.input</h2>
+            <h3>public class Input</h3>
+
+            <div class="lang-en">
+                <p>Provides a polling interface for keyboard and mouse states.</p>
+            </div>
+            <div class="lang-de">
+                <p>Bietet eine Abfrage-Schnittstelle (Polling) für Tastatur- und Mausstatus.</p>
+            </div>
+
+            <pre><code class="language-java">public class Input {
+    // Methods / Methoden
+    public boolean isKey(int keyCode); // e.g., KeyEvent.VK_A
+    
+    // Helpers / Hilfsmethoden
+    public boolean isUp();    // Arrow Up or W
+    public boolean isDown();  // Arrow Down or S
+    public boolean isLeft();  // Arrow Left or A
+    public boolean isRight(); // Arrow Right or D
+    public boolean isSpace();
+    
+    public int getMouseX();
+    public int getMouseY();
+}</code></pre>
+        </section>
+
+        <!-- LOADER -->
+        <section id="loader">
+            <h2>package engine.loader</h2>
+            <h3>public class Init</h3>
+
+            <div class="lang-en">
+                <p>The main entry point (`public static void main`). It uses <strong>Reflection</strong> to scan the classpath for any class annotated with <code>@Game</code> that extends <code>CoreGame</code>.</p>
+                <p>This allows the engine to be decoupled from your specific game code.</p>
+            </div>
+            <div class="lang-de">
+                <p>Der Haupteinstiegspunkt (`public static void main`). Es nutzt <strong>Reflection</strong>, um den Classpath nach Klassen zu scannen, die mit <code>@Game</code> annotiert sind und <code>CoreGame</code> erweitern.</p>
+                <p>Dies erlaubt eine Entkopplung der Engine von Ihrem spezifischen Spielcode.</p>
+            </div>
+
+            <pre><code class="language-java">// engine/annot/Game.java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Game {
+    String name() default "Unknown Game";
+}
+
+// engine/loader/Init.java
+// Scans directories or JAR files for @Game classes
+// Durchsucht Verzeichnisse oder JAR-Dateien nach @Game Klassen
+</code></pre>
+        </section>
+
+        <!-- DOOM TUTORIAL -->
+        <div class="tutorial-header" id="doom-tutorial">
+            <h2 class="lang-en">TUTORIAL: BUILD DOOM IN JAVABASE</h2>
+            <h2 class="lang-de">TUTORIAL: DOOM IN JAVABASE BAUEN</h2>
+            <p style="opacity: 0.9; margin-top:10px;">
+                <span class="lang-en">Creating a Raycaster using Turtle Graphics</span>
+                <span class="lang-de">Erstellung eines Raycasters mit Turtle-Grafik</span>
+            </p>
+        </div>
+
+        <section>
+            <div class="lang-en">
+                <p>In this tutorial, we will implement a classic Wolfenstein 3D style engine inside JavaBase. We will use the Turtle's drawing capabilities to render vertical strips of walls.</p>
+                <h3>Prerequisites</h3>
+                <ol>
+                    <li>Create a class named <code>DoomGame</code>.</li>
+                    <li>Annotate it with <code>@Game(name="Turtle Doom")</code>.</li>
+                    <li>Implement <code>CoreGame</code>.</li>
+                </ol>
+            </div>
+            <div class="lang-de">
+                <p>In diesem Tutorial implementieren wir eine klassische Wolfenstein 3D-Stil Engine innerhalb von JavaBase. Wir nutzen die Zeichenfähigkeiten der Turtle, um vertikale Wandstreifen zu rendern.</p>
+                <h3>Voraussetzungen</h3>
+                <ol>
+                    <li>Erstellen Sie eine Klasse namens <code>DoomGame</code>.</li>
+                    <li>Annotieren Sie sie mit <code>@Game(name="Turtle Doom")</code>.</li>
+                    <li>Implementieren Sie <code>CoreGame</code>.</li>
+                </ol>
+            </div>
+
+            <h3>Full Source Code / Vollständiger Quellcode</h3>
+
+            <pre><code class="language-java">package my.project;
+
+import engine.annot.Game;
+import engine.core.CoreGame;
+import engine.input.Input;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+
+@Game(name = "Turtle Doom")
+public class DoomGame extends CoreGame {
+
+    // --- Constants ---
+    private final int RES_SCALE = 4; // Higher = Blockier/Faster
+    private int RENDER_W;
+    private int RENDER_H;
+    
+    // --- State ---
+    private enum State { LOADING, PLAYING }
+    private State state = State.LOADING;
+    private String loadingStatus = "Initializing...";
+
+    // --- Assets ---
+    private BufferedImage gunSprite;
+    private Color[][] gunPixelMap;
+    private int gunW, gunH;
+    private boolean assetsLoaded = false;
+
+    // --- World Map (1=Wall, 0=Empty) ---
+    private final int[][] worldMap = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    };
+
+    // --- Player / Camera ---
+    private double posX = 3.5, posY = 3.5;
+    private double dirX = -1, dirY = 0;
+    private double planeX = 0, planeY = 0.66; // FOV
+
+    @Override
+    public void start() {
+        RENDER_W = getScreenWidth() / RES_SCALE;
+        RENDER_H = getScreenHeight();
+        new Thread(this::loadAssets).start();
+    }
+
+    private void loadAssets() {
+        try {
+            loadingStatus = "Loading Assets...";
+            // Example: Loading a sprite from URL or Local
+            // For tutorial brevity, we generate simple colors or use placeholders
+            generateProceduralGun();
+            assetsLoaded = true;
+            state = State.PLAYING;
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private void generateProceduralGun() {
+        gunW = 60; gunH = 100;
+        gunPixelMap = new Color[gunW][gunH];
+        for(int x=0; x<gunW; x++) {
+            for(int y=0; y<gunH; y++) {
+                gunPixelMap[x][y] = Color.DARK_GRAY;
+            }
+        }
+    }
+
+    @Override
+    public void input(Input input) {
+        if (state != State.PLAYING) return;
+        double moveSpeed = 0.08;
+        double rotSpeed = 0.05;
+
+        // Rotation
+        if (input.isLeft()) {
+            double oldDirX = dirX;
+            dirX = dirX * Math.cos(rotSpeed) - dirY * Math.sin(rotSpeed);
+            dirY = oldDirX * Math.sin(rotSpeed) + dirY * Math.cos(rotSpeed);
+            double oldPlaneX = planeX;
+            planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
+            planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
+        }
+        if (input.isRight()) {
+            double oldDirX = dirX;
+            dirX = dirX * Math.cos(-rotSpeed) - dirY * Math.sin(-rotSpeed);
+            dirY = oldDirX * Math.sin(-rotSpeed) + dirY * Math.cos(-rotSpeed);
+            double oldPlaneX = planeX;
+            planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
+            planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
+        }
+
+        // Movement
+        if (input.isUp() || input.isKey(87)) { // W
+            if(worldMap[(int)posY][(int)(posX + dirX * moveSpeed)] == 0) posX += dirX * moveSpeed;
+            if(worldMap[(int)(posY + dirY * moveSpeed)][(int)posX] == 0) posY += dirY * moveSpeed;
+        }
+        if (input.isDown() || input.isKey(83)) { // S
+            if(worldMap[(int)posY][(int)(posX - dirX * moveSpeed)] == 0) posX -= dirX * moveSpeed;
+            if(worldMap[(int)(posY - dirY * moveSpeed)][(int)posX] == 0) posY -= dirY * moveSpeed;
+        }
+    }
+
+    @Override
+    public void draw() {
+        clear();
+        if (state == State.LOADING) {
+            drawText(loadingStatus, -100, 0, 3, Color.WHITE);
+            return;
+        }
+        
+        // Raycasting Algorithm
+        for (int x = 0; x < RENDER_W; x++) {
+            double cameraX = 2 * x / (double)RENDER_W - 1; 
+            double rayDirX = dirX + planeX * cameraX;
+            double rayDirY = dirY + planeY * cameraX;
+
+            int mapX = (int) posX;
+            int mapY = (int) posY;
+
+            double sideDistX, sideDistY;
+            double deltaDistX = (rayDirX == 0) ? 1e30 : Math.abs(1 / rayDirX);
+            double deltaDistY = (rayDirY == 0) ? 1e30 : Math.abs(1 / rayDirY);
+            double perpWallDist;
+
+            int stepX, stepY;
+            int hit = 0, side = 0;
+
+            // Calculate Step and SideDist
+            if (rayDirX < 0) { stepX = -1; sideDistX = (posX - mapX) * deltaDistX; }
+            else             { stepX = 1;  sideDistX = (mapX + 1.0 - posX) * deltaDistX; }
+            if (rayDirY < 0) { stepY = -1; sideDistY = (posY - mapY) * deltaDistY; }
+            else             { stepY = 1;  sideDistY = (mapY + 1.0 - posY) * deltaDistY; }
+
+            // DDA
+            while (hit == 0) {
+                if (sideDistX < sideDistY) { sideDistX += deltaDistX; mapX += stepX; side = 0; }
+                else                       { sideDistY += deltaDistY; mapY += stepY; side = 1; }
+                
+                if (mapY >= 0 && mapY < worldMap.length && mapX >= 0 && mapX < worldMap[0].length) {
+                    if (worldMap[mapY][mapX] > 0) hit = 1;
+                } else { hit = 1; }
+            }
+
+            if (side == 0) perpWallDist = (sideDistX - deltaDistX);
+            else           perpWallDist = (sideDistY - deltaDistY);
+
+            // Draw Wall Strip
+            int lineHeight = (int) (RENDER_H / perpWallDist);
+            int drawStart = -lineHeight / 2 + RENDER_H / 2;
+            int drawEnd = lineHeight / 2 + RENDER_H / 2;
+            
+            Color color = (side == 1) ? new Color(150, 0, 0) : new Color(255, 0, 0);
+            
+            // Draw Vertical Line using Turtle
+            // Convert screenspace to Turtle space (-400 to 400)
+            int screenX = x * RES_SCALE;
+            for(int w=0; w<RES_SCALE; w++) {
+                penUp(); moveTo((screenX + w) - 400, drawStart - 300);
+                penDown(); color(color);
+                moveTo((screenX + w) - 400, drawEnd - 300);
+            }
+        }
+        drawGun();
+    }
+    
+    // Helper methods for Gun and Text omitted for brevity (see full implementation above)
+    // Hilfsmethoden für Waffe und Text hier gekürzt (siehe vollständige Implementierung oben)
+    private void drawGun() { /* ... */ }
+    private void drawText(String s, int x, int y, int scale, Color c) { /* ... */ }
+}</code></pre>
+
+            <h3 class="lang-en">Utility: Loading Images</h3>
+            <h3 class="lang-de">Utility: Bilder laden</h3>
+            <pre><code class="language-java">package my.project.utils; 
+
+import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class Image {
+    /**
+     * Loads an image from resources and returns a Color array.
+     */
+    public static Color[][] loadPixelMap(String resourcePath) throws IOException {
+        InputStream is = Image.class.getResourceAsStream(resourcePath);
+        if (is == null) throw new IOException("Resource not found: " + resourcePath);
+
+        BufferedImage image = ImageIO.read(is);
+        int width = image.getWidth();
+        int height = image.getHeight();
+        Color[][] pixelMap = new Color[width][height];
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                pixelMap[x][y] = new Color(image.getRGB(x, y), true);
+            }
+        }
+        return pixelMap;
+    }
+}</code></pre>
+        </section>
+
+        <footer style="margin-top:50px; border-top: 1px solid var(--border-color); padding: 20px; text-align: center; opacity: 0.5; font-size: 0.8rem;">
+            &copy; 2026 JavaBase Engine.
+        </footer>
+    </main>
+
+    <script>
+        let currentLang = 'en';
+        let currentTheme = 'dark'; // Default request was dark mode
+
+        function setActive(element) {
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'de' : 'en';
+            document.documentElement.lang = currentLang;
+            
+            const enElements = document.querySelectorAll('.lang-en');
+            const deElements = document.querySelectorAll('.lang-de');
+
+            if (currentLang === 'en') {
+                enElements.forEach(el => el.style.display = 'block');
+                deElements.forEach(el => el.style.display = 'none');
+            } else {
+                enElements.forEach(el => el.style.display = 'none');
+                deElements.forEach(el => el.style.display = 'block');
+            }
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', currentTheme);
+        }
+
+        // Initialize Highlight.js
+        hljs.highlightAll();
+    </script>
+</body>
+</html>
