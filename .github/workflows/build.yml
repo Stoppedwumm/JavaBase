@@ -5,7 +5,7 @@ on:
     types: [published]
 
 permissions:
-  contents: write # Required to upload assets to the release
+  contents: write # Required to upload assets and push Javadoc changes
 
 jobs:
   build-and-upload:
@@ -14,6 +14,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Fetch full history so we can push back to the branch if needed
+          fetch-depth: 0 
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -26,12 +29,42 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        # Runs the jar task (assumes you have the gradle wrapper committed)
         run: ./gradlew jar
+
+      - name: Generate and Update Javadoc
+        run: |
+          # 1. Remove old javadoc
+          rm -rf docs/javadoc/
+          
+          # 2. Run gradle javadoc
+          ./gradlew javadoc
+          
+          # 3. Create docs folder if it doesn't exist
+          mkdir -p docs
+          
+          # 4. Copy new javadoc to docs/
+          cp -r app/build/docs/javadoc/ docs/
+
+      - name: Commit and Push Javadoc
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add docs/
+          
+          # Check if there are changes before committing
+          if ! git diff --cached --exit-code; then
+            git commit -m "Update Javadoc for release ${{ github.event.release.tag_name }}"
+            
+            # Push changes to the default branch (usually 'main' or 'master')
+            # Since this triggered on a tag, we specify the target branch explicitly.
+            git push origin HEAD:main
+          else
+            echo "No Javadoc changes to commit."
+          fi
 
       - name: Upload JAR to Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # Uses GitHub CLI (pre-installed) to upload the artifact
         run: |
           gh release upload ${{ github.event.release.tag_name }} app/build/libs/app.jar
