@@ -91,10 +91,6 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Init</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Engine loader that discovers and initializes game classes.
- 
- Scans the classpath (whether running from IDE or JAR) to find classes annotated with <a href="../annot/Game.html" title="annotation interface in engine.annot"><code>Game</code></a>.
- Validates that the class extends <a href="../core/CoreGame.html" title="class in engine.core"><code>CoreGame</code></a> and instantiates it.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -107,9 +103,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Init</a>()</code></div>
-<div class="col-last even-row-color">
-<div class="block">Creates a new Init instance.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -126,9 +120,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#main(java.lang.String%5B%5D)" class="member-name-link">main</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Main entry point for the engine loader.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -150,8 +142,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>Init</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Init</span>()</div>
-<div class="block">Creates a new Init instance.
- This class is not meant to be instantiated; use <a href="#main(java.lang.String%5B%5D)"><code>main(String[])</code></a> instead.</div>
 </section>
 </li>
 </ul>
@@ -166,14 +156,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="main(java.lang.String[])">
 <h3>main</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">main</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</span></div>
-<div class="block">Main entry point for the engine loader.
- 
- Scans all classes in the application, finds the first class annotated with <code>@Game</code>
- that extends <a href="../core/CoreGame.html" title="class in engine.core"><code>CoreGame</code></a>, and starts the game engine.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>args</code> - command-line arguments (currently unused)</dd>
-</dl>
 </section>
 </li>
 </ul>
