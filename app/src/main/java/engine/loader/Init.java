@@ -4,75 +4,52 @@ import engine.annot.Game;
 import engine.core.CoreGame;
 
 import java.io.File;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-/**
- * Engine loader that discovers and initializes game classes.
- * 
- * Scans the classpath (whether running from IDE or JAR) to find classes annotated with {@link Game}.
- * Validates that the class extends {@link CoreGame} and instantiates it.
- */
 public class Init {
-    /**
-     * Creates a new Init instance.
-     * This class is not meant to be instantiated; use {@link #main(String[])} instead.
-     */
+
     public Init() { }
 
-    /**
-     * Main entry point for the engine loader.
-     * 
-     * Scans all classes in the application, finds the first class annotated with {@code @Game}
-     * that extends {@link CoreGame}, and starts the game engine.
-     * 
-     * @param args command-line arguments (currently unused)
-     */
     public static void main(String[] args) {
         System.out.println("--- Engine Loader Starting ---");
 
         try {
-            // 1. Scan for all classes in the application (Handles both IDE and JAR)
+            // 1. Scan the ENTIRE classpath
             List<Class<?>> allClasses = getAllClasses();
 
             boolean gameFound = false;
 
             for (Class<?> clazz : allClasses) {
-                // Requirement 1: Check if class is NOT under engine.*
-                if (clazz.getName().startsWith("engine.")) {
+                // Skip engine internal classes
+                if (clazz.getName().startsWith("engine.") || clazz.getName().startsWith("java.")) {
                     continue;
                 }
 
-                // Requirement 2: Check for @engine.annot.Game annotation
+                // Check for Annotation
                 if (!clazz.isAnnotationPresent(Game.class)) {
                     continue;
                 }
 
-                // Requirement 3: Check if it extends/overrides engine.core.CoreGame
+                // Check Inheritance
                 if (!CoreGame.class.isAssignableFrom(clazz)) {
                     System.err.println("Found @Game on " + clazz.getName() + " but it does not extend CoreGame!");
                     continue;
                 }
 
-                // Found it!
                 System.out.println("Found valid game class: " + clazz.getName());
                 Game gameAnnot = clazz.getAnnotation(Game.class);
                 System.out.println("Game Name: " + gameAnnot.name());
 
                 gameFound = true;
 
-                // Instantiate and run it
                 try {
                     System.out.println("Instantiating...");
                     CoreGame gameInstance = (CoreGame) clazz.getDeclaredConstructor().newInstance();
                     gameInstance.startEngine();
-                    // Stop after finding the first game to prevent multiple windows
                     return; 
                 } catch (Exception e) {
                     System.err.println("Failed to initialize game: " + e.getMessage());
@@ -90,45 +67,32 @@ public class Init {
     }
 
     /**
-     * Scans the classpath to find all loadable classes.
-     * Handles both directory (IDE) and JAR (Release) execution modes.
-     * 
-     * @return a list of all discovered classes
-     * @throws Exception if class loading fails
+     * Scans the system classpath string to find all entries.
      */
-    private static List<Class<?>> getAllClasses() throws Exception {
+    private static List<Class<?>> getAllClasses() {
         List<Class<?>> classes = new ArrayList<>();
         
-        // Get the location of THIS class (Init.class)
-        URL location = Init.class.getProtectionDomain().getCodeSource().getLocation();
-        String path = URLDecoder.decode(location.getFile(), StandardCharsets.UTF_8.name());
-        File source = new File(path);
+        // This property contains all JARs and folders loaded by the application
+        String classPath = System.getProperty("java.class.path");
+        String[] pathEntries = classPath.split(File.pathSeparator);
 
-        // Debug info
-        System.out.println("Running from: " + source.getAbsolutePath());
-
-        if (source.isDirectory()) {
-            // Case 1: Running from IDE (Directories)
-            System.out.println("Mode: Directory Scan");
-            scanDirectory(source, "", classes);
-        } else if (source.getName().endsWith(".jar")) {
-            // Case 2: Running from JAR
-            System.out.println("Mode: JAR Scan");
-            scanJar(source, classes);
-        } else {
-            System.err.println("Unknown source type: " + source.getName());
+        for (String entry : pathEntries) {
+            File file = new File(entry);
+            try {
+                if (file.isDirectory()) {
+                    scanDirectory(file, "", classes);
+                } else if (file.getName().endsWith(".jar")) {
+                    scanJar(file, classes);
+                }
+            } catch (Exception e) {
+                // If one classpath entry fails (e.g. corrupted jar), just skip it
+                System.err.println("Failed to scan classpath entry: " + entry);
+            }
         }
 
         return classes;
     }
 
-    /**
-     * Recursively scans a directory for .class files (IDE Mode).
-     * 
-     * @param directory the directory to scan
-     * @param packageName the current package name
-     * @param classes the list to accumulate discovered classes
-     */
     private static void scanDirectory(File directory, String packageName, List<Class<?>> classes) {
         if (!directory.exists()) return;
 
@@ -137,29 +101,27 @@ public class Init {
 
         for (File file : files) {
             if (file.isDirectory()) {
-                // Recurse
                 String subPackage = packageName.isEmpty() ? file.getName() : packageName + "." + file.getName();
                 scanDirectory(file, subPackage, classes);
             } else if (file.getName().endsWith(".class")) {
                 try {
                     String className = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
                     if (className.startsWith(".")) className = className.substring(1);
-                    classes.add(Class.forName(className));
-                } catch (ClassNotFoundException e) {
-                    // Ignore invalid classes
+                    // Optimization: Don't load module-info or obvious system classes
+                    if (!className.equals("module-info")) {
+                        classes.add(Class.forName(className, false, Init.class.getClassLoader()));
+                    }
+                } catch (Throwable e) {
+                    // Ignore classes that cannot be loaded (missing dependencies etc)
                 }
             }
         }
     }
 
-    /**
-     * Scans all entries inside a JAR file (Release Mode).
-     * 
-     * @param jarFile the JAR file to scan
-     * @param classes the list to accumulate discovered classes
-     * @throws Exception if JAR reading fails
-     */
     private static void scanJar(File jarFile, List<Class<?>> classes) throws Exception {
+        // Optimization: Skip scanning the standard Java runtime JARs (rt.jar, etc) to speed up boot
+        // You can add logic here to check if jarFile.getName() contains "jdk" or "jre"
+        
         try (JarFile jar = new JarFile(jarFile)) {
             Enumeration<JarEntry> entries = jar.entries();
             
@@ -167,14 +129,16 @@ public class Init {
                 JarEntry entry = entries.nextElement();
                 String name = entry.getName();
 
-                // We only care about .class files
                 if (!entry.isDirectory() && name.endsWith(".class")) {
                     try {
-                        // Convert path "my/project/Game.class" -> "my.project.Game"
                         String className = name.substring(0, name.length() - 6).replace('/', '.');
-                        classes.add(Class.forName(className));
-                    } catch (ClassNotFoundException | NoClassDefFoundError e) {
-                        // Sometimes JARs contain metadata classes we can't load, skip them
+                        // Optimization: Skip module-info and engine classes immediately
+                        if (!className.equals("module-info") && !className.startsWith("engine.")) {
+                             // false flag = don't initialize static blocks yet, safer for scanning
+                            classes.add(Class.forName(className, false, Init.class.getClassLoader()));
+                        }
+                    } catch (Throwable e) {
+                        // Ignore
                     }
                 }
             }
