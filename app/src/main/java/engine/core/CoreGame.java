@@ -5,8 +5,6 @@ import engine.input.Input;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public abstract class CoreGame extends Canvas {
 
@@ -97,6 +95,9 @@ public abstract class CoreGame extends Canvas {
             do {
                 pen = (Graphics2D) bufferStrategy.getDrawGraphics();
                 try {
+                    // Turn on Anti-Aliasing for smooth "Neon" lines
+                    pen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    
                     pen.setColor(Color.BLACK);
                     pen.fillRect(0, 0, getWidth(), getHeight());
                     pen.setColor(Color.WHITE);
@@ -134,7 +135,7 @@ public abstract class CoreGame extends Canvas {
     }
 
     // ============================================================
-    // TURTLE API (UNCHANGED)
+    // TURTLE API & EXTENDED DRAWING
     // ============================================================
     protected void penDown() { penDown = true; }
     protected void penUp() { penDown = false; }
@@ -156,16 +157,45 @@ public abstract class CoreGame extends Canvas {
         moveTo(turtleX + dx, turtleY + dy);
     }
 
+    /**
+     * FIX: Added drawSquare method required by NeonDodger
+     */
+    protected void drawSquare(int size, boolean filled) {
+        int x = toScreenX(turtleX) - size / 2;
+        int y = toScreenY(turtleY) - size / 2;
+        if (filled) {
+            pen.fillRect(x, y, size, size);
+        } else {
+            pen.drawRect(x, y, size, size);
+        }
+    }
+
+    /**
+     * Helper for drawing scores and UI
+     */
+    protected void drawText(String text, double x, double y) {
+        pen.drawString(text, toScreenX(x), toScreenY(y));
+    }
+
+    /**
+     * Changes font size for the UI
+     */
+    protected void setFontSize(int size) {
+        pen.setFont(new Font("Arial", Font.BOLD, size));
+    }
+
+    /**
+     * Changes line thickness (important for Neon effect)
+     */
+    protected void setThickness(float width) {
+        pen.setStroke(new BasicStroke(width));
+    }
+
     protected void clear() {
         Color old = pen.getColor();
         pen.setColor(Color.BLACK);
         pen.fillRect(0, 0, getWidth(), getHeight());
         pen.setColor(old);
-    }
-
-    protected void fill() {
-        // (unchanged flood fill, but now directly on the buffer)
-        // You can keep your existing logic if needed
     }
 
     private int toScreenX(double x) { return (int) (x + getWidth() / 2); }
