@@ -168,6 +168,64 @@ public abstract class CoreGame extends Canvas {
         // You can keep your existing logic if needed
     }
 
+    protected void drawSquare(int size, boolean filled) {
+        int x = toScreenX(turtleX) - size / 2;
+        int y = toScreenY(turtleY) - size / 2;
+        if (filled) {
+            pen.fillRect(x, y, size, size);
+        } else {
+            pen.drawRect(x, y, size, size);
+        }
+    }
+
+    /**
+     * Draws a rectangle centered at the current turtle position.
+     */
+    protected void drawRect(int width, int height, boolean filled) {
+        int x = toScreenX(turtleX) - width / 2;
+        int y = toScreenY(turtleY) - height / 2;
+        if (filled) {
+            pen.fillRect(x, y, width, height);
+        } else {
+            pen.drawRect(x, y, width, height);
+        }
+    }
+
+    /**
+     * Draws a circle centered at the current turtle position.
+     */
+    protected void drawCircle(int radius, boolean filled) {
+        int x = toScreenX(turtleX) - radius;
+        int y = toScreenY(turtleY) - radius;
+        int diameter = radius * 2;
+        if (filled) {
+            pen.fillOval(x, y, diameter, diameter);
+        } else {
+            pen.drawOval(x, y, diameter, diameter);
+        }
+    }
+
+    /**
+     * Draws text at the specified coordinates (relative to center).
+     */
+    protected void drawText(String text, double x, double y) {
+        pen.drawString(text, toScreenX(x), toScreenY(y));
+    }
+
+    /**
+     * Changes the font size for drawText.
+     */
+    protected void setFontSize(int size) {
+        pen.setFont(new Font("Arial", Font.BOLD, size));
+    }
+
+    /**
+     * Changes line thickness (useful for "Neon" effects).
+     */
+    protected void setThickness(float thickness) {
+        pen.setStroke(new BasicStroke(thickness));
+    }
+
     private int toScreenX(double x) { return (int) (x + getWidth() / 2); }
     private int toScreenY(double y) { return (int) (y + getHeight() / 2); }
 }
