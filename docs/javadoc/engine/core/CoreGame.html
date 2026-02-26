@@ -177,6 +177,30 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#draw()" class="member-name-link">draw</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawCircle(int,boolean)" class="member-name-link">drawCircle</a><wbr>(int&nbsp;radius,
+ boolean&nbsp;filled)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Draws a circle centered at the current turtle position.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawRect(int,int,boolean)" class="member-name-link">drawRect</a><wbr>(int&nbsp;width,
+ int&nbsp;height,
+ boolean&nbsp;filled)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Draws a rectangle centered at the current turtle position.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawSquare(int,boolean)" class="member-name-link">drawSquare</a><wbr>(int&nbsp;size,
+ boolean&nbsp;filled)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawText(java.lang.String,double,double)" class="member-name-link">drawText</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text,
+ double&nbsp;x,
+ double&nbsp;y)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Draws text at the specified coordinates (relative to center).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fill()" class="member-name-link">fill</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract void</code></div>
@@ -196,6 +220,16 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#penUp()" class="member-name-link">penUp</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFontSize(int)" class="member-name-link">setFontSize</a><wbr>(int&nbsp;size)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Changes the font size for drawText.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setThickness(float)" class="member-name-link">setThickness</a><wbr>(float&nbsp;thickness)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Changes line thickness (useful for "Neon" effects).</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#start()" class="member-name-link">start</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
@@ -319,6 +353,53 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="fill()">
 <h3>fill</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fill</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="drawSquare(int,boolean)">
+<h3>drawSquare</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawSquare</span><wbr><span class="parameters">(int&nbsp;size,
+ boolean&nbsp;filled)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="drawRect(int,int,boolean)">
+<h3>drawRect</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawRect</span><wbr><span class="parameters">(int&nbsp;width,
+ int&nbsp;height,
+ boolean&nbsp;filled)</span></div>
+<div class="block">Draws a rectangle centered at the current turtle position.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="drawCircle(int,boolean)">
+<h3>drawCircle</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawCircle</span><wbr><span class="parameters">(int&nbsp;radius,
+ boolean&nbsp;filled)</span></div>
+<div class="block">Draws a circle centered at the current turtle position.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="drawText(java.lang.String,double,double)">
+<h3>drawText</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawText</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text,
+ double&nbsp;x,
+ double&nbsp;y)</span></div>
+<div class="block">Draws text at the specified coordinates (relative to center).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setFontSize(int)">
+<h3>setFontSize</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFontSize</span><wbr><span class="parameters">(int&nbsp;size)</span></div>
+<div class="block">Changes the font size for drawText.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setThickness(float)">
+<h3>setThickness</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setThickness</span><wbr><span class="parameters">(float&nbsp;thickness)</span></div>
+<div class="block">Changes line thickness (useful for "Neon" effects).</div>
 </section>
 </li>
 </ul>
