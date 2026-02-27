@@ -17,7 +17,7 @@ public abstract class CoreGame extends Canvas {
     private boolean running;
 
     private BufferStrategy bufferStrategy;
-    protected Graphics2D pen;
+    public Graphics2D pen;
 
     private final Input inputSystem = new Input();
 
