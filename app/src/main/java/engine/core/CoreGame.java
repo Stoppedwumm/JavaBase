@@ -136,11 +136,11 @@ public abstract class CoreGame extends Canvas {
     // ============================================================
     // TURTLE API (UNCHANGED)
     // ============================================================
-    protected void penDown() { penDown = true; }
-    protected void penUp() { penDown = false; }
-    protected void color(Color c) { pen.setColor(c); }
+    public void penDown() { penDown = true; }
+    public void penUp() { penDown = false; }
+    public void color(Color c) { pen.setColor(c); }
 
-    protected void moveTo(double x, double y) {
+    public void moveTo(double x, double y) {
         int sx = toScreenX(turtleX);
         int sy = toScreenY(turtleY);
         int ex = toScreenX(x);
@@ -152,23 +152,23 @@ public abstract class CoreGame extends Canvas {
         turtleY = y;
     }
 
-    protected void move(double dx, double dy) {
+    public void move(double dx, double dy) {
         moveTo(turtleX + dx, turtleY + dy);
     }
 
-    protected void clear() {
+    public void clear() {
         Color old = pen.getColor();
         pen.setColor(Color.BLACK);
         pen.fillRect(0, 0, getWidth(), getHeight());
         pen.setColor(old);
     }
 
-    protected void fill() {
+    public void fill() {
         // (unchanged flood fill, but now directly on the buffer)
         // You can keep your existing logic if needed
     }
 
-    protected void drawSquare(int size, boolean filled) {
+    public void drawSquare(int size, boolean filled) {
         int x = toScreenX(turtleX) - size / 2;
         int y = toScreenY(turtleY) - size / 2;
         if (filled) {
@@ -181,7 +181,7 @@ public abstract class CoreGame extends Canvas {
     /**
      * Draws a rectangle centered at the current turtle position.
      */
-    protected void drawRect(int width, int height, boolean filled) {
+    public void drawRect(int width, int height, boolean filled) {
         int x = toScreenX(turtleX) - width / 2;
         int y = toScreenY(turtleY) - height / 2;
         if (filled) {
@@ -194,7 +194,7 @@ public abstract class CoreGame extends Canvas {
     /**
      * Draws a circle centered at the current turtle position.
      */
-    protected void drawCircle(int radius, boolean filled) {
+    public void drawCircle(int radius, boolean filled) {
         int x = toScreenX(turtleX) - radius;
         int y = toScreenY(turtleY) - radius;
         int diameter = radius * 2;
@@ -208,21 +208,21 @@ public abstract class CoreGame extends Canvas {
     /**
      * Draws text at the specified coordinates (relative to center).
      */
-    protected void drawText(String text, double x, double y) {
+    public void drawText(String text, double x, double y) {
         pen.drawString(text, toScreenX(x), toScreenY(y));
     }
 
     /**
      * Changes the font size for drawText.
      */
-    protected void setFontSize(int size) {
+    public void setFontSize(int size) {
         pen.setFont(new Font("Arial", Font.BOLD, size));
     }
 
     /**
      * Changes line thickness (useful for "Neon" effects).
      */
-    protected void setThickness(float thickness) {
+    public void setThickness(float thickness) {
         pen.setStroke(new BasicStroke(thickness));
     }
 
