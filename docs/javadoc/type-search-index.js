@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"engine.core","l":"CoreGame"},{"p":"engine.annot","l":"Game"},{"p":"engine.loader","l":"Init"},{"p":"engine.input","l":"Input"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"engine.audio","l":"Audio"},{"p":"engine.core","l":"CoreGame"},{"p":"engine.annot","l":"Game"},{"p":"engine.loader","l":"Init"},{"p":"engine.input","l":"Input"}];updateSearchResults();
