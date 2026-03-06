@@ -7,25 +7,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <h1>EXPERIMENTAL AUDIO ENGINE</h1>
+ * <b>EXPERIMENTAL AUDIO ENGINE</b>
  * <p>
  * <b>WARNING:</b> This class is currently in an experimental state. The API, internal 
  * implementation, and resource management strategies are not finalized. 
- * Use this in production-level projects with caution as it may be subject to 
- * breaking changes or removal in future versions of JavaBase.
  * </p>
  * 
  * <p>Current Limitations:</p>
  * <ul>
  *   <li>Only supports 16-bit PCM .WAV files natively.</li>
- *   <li>The cache grows indefinitely; there is currently no logic to dispose of unused clips.</li>
- *   <li>Simultaneous playback is limited by the system's available Mixer lines.</li>
+ *   <li>The cache grows indefinitely; there is no logic to dispose of unused clips.</li>
  * </ul>
  *
  * @author JavaBase Contributor
  * @version 0.1-ALPHA
  */
 public class Audio {
+
+    /**
+     * Private constructor to prevent instantiation of utility class.
+     */
+    private Audio() {}
 
     private static final Map<String, Clip> cache = new HashMap<>();
     private static Clip backgroundMusic;
@@ -38,7 +40,7 @@ public class Audio {
         try {
             Clip clip = getClip(path);
             if (clip != null) {
-                clip.setFramePosition(0); // Rewind to start
+                clip.setFramePosition(0);
                 clip.start();
             }
         } catch (Exception e) {
@@ -74,9 +76,6 @@ public class Audio {
         }
     }
 
-    /**
-     * Internal helper to convert linear volume to Decibels.
-     */
     private static void setVolume(Clip clip, float volume) {
         try {
             if (volume < 0f) volume = 0f;
@@ -85,7 +84,7 @@ public class Audio {
             float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
             gainControl.setValue(dB);
         } catch (Exception e) {
-            System.err.println("Volume Control not supported on this line.");
+            System.err.println("Volume Control not supported.");
         }
     }
 
