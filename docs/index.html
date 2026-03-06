@@ -45,7 +45,6 @@
             overflow: hidden;
         }
 
-        /* Sidebar */
         nav {
             width: 260px;
             background-color: var(--sidebar-bg);
@@ -89,7 +88,6 @@
             letter-spacing: 1px;
         }
 
-        /* Main Content */
         main {
             flex-grow: 1;
             padding: 40px;
@@ -122,7 +120,6 @@
             color: var(--accent-color);
         }
 
-        /* Typography */
         h1, h2, h3 { color: var(--heading-color); }
         h2 { margin-top: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         p { line-height: 1.6; }
@@ -138,7 +135,6 @@
             color: var(--secondary-accent);
         }
 
-        /* Code Blocks */
         pre {
             background-color: var(--code-bg);
             padding: 15px;
@@ -152,7 +148,6 @@
             font-size: 0.9rem;
         }
 
-        /* Classes Table */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -170,27 +165,14 @@
 
         th { background-color: rgba(255,255,255,0.05); color: var(--accent-color); }
 
-        /* Tutorial Section */
-        .tutorial-header {
-            background: linear-gradient(45deg, #b71c1c, #d32f2f);
-            color: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-top: 60px;
-            margin-bottom: 30px;
-            text-align: center;
+        .example-box {
+            border-left: 4px solid var(--accent-color);
+            background: rgba(0, 188, 212, 0.05);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
         }
 
-        .tutorial-header h2 {
-            border: none;
-            color: white;
-            margin: 0;
-        }
-
-        /* Utility */
-        .hidden { display: none; }
-        
-        /* Language handling */
         .lang-de { display: none; }
     </style>
 </head>
@@ -205,18 +187,10 @@
         <a href="#intro" class="active" onclick="setActive(this)">Introduction</a>
         <a href="#core" onclick="setActive(this)">Core Engine</a>
         <a href="#input" onclick="setActive(this)">Input System</a>
-        <a href="#loader" onclick="setActive(this)">Loader (Init)</a>
         
-        <!-- Added Javadoc Link -->
-        <a href="javadoc" target="_blank" style="display: flex; justify-content: space-between; align-items: center;">
-            Javadoc 
-            <span style="font-size: 0.8em; opacity: 0.7;">↗</span>
-        </a>
-
-        <div class="lang-en separator">Tutorials</div>
-        <div class="lang-de separator">Tutorials</div>
-        
-        <a href="#doom-tutorial" style="color: var(--secondary-accent);" onclick="setActive(this)">BUILD DOOM</a>
+        <div class="lang-en separator">Examples</div>
+        <div class="lang-de separator">Beispiele</div>
+        <a href="#hello-world" onclick="setActive(this)">Simple Example</a>
     </nav>
 
     <main>
@@ -242,21 +216,17 @@
             <h2 class="lang-de">Erste Schritte</h2>
 
             <div class="lang-en">
-                <p>JavaBase is a minimal framework wrapping Swing and AWT to create a game loop and provide simple drawing commands. It combines standard canvas rendering with "Turtle Graphics" commands (move, pen down, etc.).</p>
-                <p>To start a new project, clone the template:</p>
+                <p>JavaBase is a minimal framework that provides a 60 FPS game loop and a center-oriented coordinate system. It uses <strong>Turtle Graphics</strong> logic (drawing by moving a pen) alongside modern helper methods for shapes and text.</p>
             </div>
             <div class="lang-de">
-                <p>JavaBase ist ein minimales Framework, das Swing und AWT kapselt, um einen Game-Loop zu erstellen und einfache Zeichenbefehle bereitzustellen. Es kombiniert Standard-Canvas-Rendering mit "Turtle-Grafik"-Befehlen (Bewegen, Stift runter, etc.).</p>
-                <p>Um ein neues Projekt zu starten, klonen Sie das Template:</p>
+                <p>JavaBase ist ein minimales Framework, das einen 60-FPS-Game-Loop und ein zentriertes Koordinatensystem bietet. Es nutzt die Logik der <strong>Turtle-Grafik</strong> (Zeichnen durch Bewegen eines Stifts) zusammen mit modernen Hilfsmethoden für Formen und Text.</p>
             </div>
 
-            <pre><code class="language-bash">git clone https://github.com/Stoppedwumm/JavaBaseTemplate</code></pre>
-            
-            <p>
-                <span class="lang-en">Modify the entry point at:</span>
-                <span class="lang-de">Bearbeiten Sie den Einstiegspunkt unter:</span> 
-                <span class="badge">app/src/main/java/example/project/NeonDodger.java</span>
-            </p>
+            <pre><code class="language-java">public class MyGame extends CoreGame {
+    public void start() { /* Setup */ }
+    public void draw() { /* Render */ }
+    public void input(Input in) { /* Logic */ }
+}</code></pre>
         </section>
 
         <!-- CORE GAME -->
@@ -265,10 +235,10 @@
             <h3>public abstract class CoreGame</h3>
             
             <div class="lang-en">
-                <p>The heart of the engine. Your game class must extend this.</p>
+                <p>The base class for your game. All drawing coordinates are relative to the center of the screen (0,0).</p>
             </div>
             <div class="lang-de">
-                <p>Das Herz der Engine. Ihre Spielklasse muss von dieser Klasse erben.</p>
+                <p>Die Basisklasse für Ihr Spiel. Alle Zeichenkoordinaten beziehen sich auf die Mitte des Bildschirms (0,0).</p>
             </div>
 
             <table>
@@ -281,43 +251,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><code>start()</code></td>
-                        <td><span class="lang-en">Called once on initialization.</span><span class="lang-de">Wird einmalig bei der Initialisierung aufgerufen.</span></td>
-                    </tr>
-                    <tr>
-                        <td><code>draw()</code></td>
-                        <td><span class="lang-en">Called every frame (60 FPS). Use Turtle commands here.</span><span class="lang-de">Wird jeden Frame aufgerufen (60 FPS). Nutzen Sie hier Turtle-Befehle.</span></td>
-                    </tr>
-                    <tr>
-                        <td><code>input(Input in)</code></td>
-                        <td><span class="lang-en">Handle logic and key/mouse events.</span><span class="lang-de">Verarbeitung von Logik und Tasten-/Maus-Events.</span></td>
-                    </tr>
-                    <tr>
-                        <td><code>moveTo(x, y)</code></td>
-                        <td><span class="lang-en">Moves the turtle. Draws line if pen is down.</span><span class="lang-de">Bewegt die Turtle. Zeichnet Linie, wenn Stift unten.</span></td>
-                    </tr>
-                    <tr>
-                        <td><code>fill()</code></td>
-                        <td><span class="lang-en">Flood fills the area starting from turtle position.</span><span class="lang-de">Füllt den Bereich ausgehend von der Turtle-Position (Flood Fill).</span></td>
-                    </tr>
+                    <tr><td><code>start()</code></td><td>Called once when the window opens.</td></tr>
+                    <tr><td><code>draw()</code></td><td>Called every frame. Use drawing commands here.</td></tr>
+                    <tr><td><code>input(Input in)</code></td><td>Called before draw. Use for logic and movement.</td></tr>
+                    <tr><td><code>moveTo(x, y)</code></td><td>Moves pen to absolute coordinate. Draws if pen is down.</td></tr>
+                    <tr><td><code>move(dx, dy)</code></td><td>Moves pen relative to current position.</td></tr>
+                    <tr><td><code>penUp() / penDown()</code></td><td>Toggle whether movement leaves a trail.</td></tr>
+                    <tr><td><code>color(Color c)</code></td><td>Sets the current drawing color.</td></tr>
+                    <tr><td><code>setThickness(float t)</code></td><td>Sets line width (Stroke).</td></tr>
+                    <tr><td><code>drawCircle(r, filled)</code></td><td>Draws a circle at the current pen position.</td></tr>
+                    <tr><td><code>drawRect(w, h, filled)</code></td><td>Draws a rectangle at current position.</td></tr>
+                    <tr><td><code>drawText(str, x, y)</code></td><td>Draws text at specified coordinates.</td></tr>
                 </tbody>
             </table>
-
-            <pre><code class="language-java">package engine.core;
-// ... imports omitted for brevity ...
-
-public abstract class CoreGame extends Canvas {
-    // Engine State
-    private double turtleX = 0, turtleY = 0;
-    
-    // Abstract Methods to implement
-    public abstract void start();
-    public abstract void draw();
-    public abstract void input(Input input);
-
-    // See full source code in project...
-}</code></pre>
         </section>
 
         <!-- INPUT -->
@@ -326,499 +272,66 @@ public abstract class CoreGame extends Canvas {
             <h3>public class Input</h3>
 
             <div class="lang-en">
-                <p>Provides a polling interface for keyboard and mouse states.</p>
+                <p>Polling system for user interaction.</p>
             </div>
             <div class="lang-de">
-                <p>Bietet eine Abfrage-Schnittstelle (Polling) für Tastatur- und Mausstatus.</p>
+                <p>Abfragesystem für Benutzerinteraktionen.</p>
             </div>
 
-            <pre><code class="language-java">public class Input {
-    // Methods / Methoden
-    public boolean isKey(int keyCode); // e.g., KeyEvent.VK_A
-    
-    // Helpers / Hilfsmethoden
-    public boolean isUp();    // Arrow Up or W
-    public boolean isDown();  // Arrow Down or S
-    public boolean isLeft();  // Arrow Left or A
-    public boolean isRight(); // Arrow Right or D
-    public boolean isSpace();
-    
-    public int getMouseX();
-    public int getMouseY();
-}</code></pre>
+            <pre><code class="language-java">// Inside input(Input in)
+if (in.isUp()) { /* W or Arrow Up */ }
+if (in.isKey(KeyEvent.VK_E)) { /* Custom key */ }
+int mx = in.getMouseX(); // 0 is center</code></pre>
         </section>
 
-        <!-- LOADER -->
-        <section id="loader">
-            <h2>package engine.loader</h2>
-            <h3>public class Init</h3>
+        <!-- SIMPLE EXAMPLE -->
+        <section id="hello-world">
+            <h2 class="lang-en">Simple Example: Neon Circle</h2>
+            <h2 class="lang-de">Einfaches Beispiel: Neon-Kreis</h2>
 
-            <div class="lang-en">
-                <p>The main entry point (`public static void main`). It uses <strong>Reflection</strong> to scan the classpath for any class annotated with <code>@Game</code> that extends <code>CoreGame</code>.</p>
-                <p>This allows the engine to be decoupled from your specific game code.</p>
-            </div>
-            <div class="lang-de">
-                <p>Der Haupteinstiegspunkt (`public static void main`). Es nutzt <strong>Reflection</strong>, um den Classpath nach Klassen zu scannen, die mit <code>@Game</code> annotiert sind und <code>CoreGame</code> erweitern.</p>
-                <p>Dies erlaubt eine Entkopplung der Engine von Ihrem spezifischen Spielcode.</p>
-            </div>
-
-            <pre><code class="language-java">// engine/annot/Game.java
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Game {
-    String name() default "Unknown Game";
-}
-
-// engine/loader/Init.java
-// Scans directories or JAR files for @Game classes
-// Durchsucht Verzeichnisse oder JAR-Dateien nach @Game Klassen
-</code></pre>
-        </section>
-
-        <!-- DOOM TUTORIAL -->
-        <div class="tutorial-header" id="doom-tutorial">
-            <h2 class="lang-en">TUTORIAL: BUILD DOOM IN JAVABASE</h2>
-            <h2 class="lang-de">TUTORIAL: DOOM IN JAVABASE BAUEN</h2>
-            <p style="opacity: 0.9; margin-top:10px;">
-                <span class="lang-en">Creating a Raycaster using Turtle Graphics</span>
-                <span class="lang-de">Erstellung eines Raycasters mit Turtle-Grafik</span>
-            </p>
-        </div>
-
-        <section>
-            <div class="lang-en">
-                <p>In this tutorial, we will implement a classic Wolfenstein 3D style engine inside JavaBase. We will use the Turtle's drawing capabilities to render vertical strips of walls.</p>
-                <h3>Prerequisites</h3>
-                <ol>
-                    <li>Create a class named <code>DoomGame</code>.</li>
-                    <li>Annotate it with <code>@Game(name="Turtle Doom")</code>.</li>
-                    <li>Implement <code>CoreGame</code>.</li>
-                </ol>
-            </div>
-            <div class="lang-de">
-                <p>In diesem Tutorial implementieren wir eine klassische Wolfenstein 3D-Stil Engine innerhalb von JavaBase. Wir nutzen die Zeichenfähigkeiten der Turtle, um vertikale Wandstreifen zu rendern.</p>
-                <h3>Voraussetzungen</h3>
-                <ol>
-                    <li>Erstellen Sie eine Klasse namens <code>DoomGame</code>.</li>
-                    <li>Annotieren Sie sie mit <code>@Game(name="Turtle Doom")</code>.</li>
-                    <li>Implementieren Sie <code>CoreGame</code>.</li>
-                </ol>
-            </div>
-
-            <h3>Full Source Code / Vollständiger Quellcode</h3>
-
-            <pre><code class="language-java">
-package my.project;
-
-import engine.annot.Game;
-import engine.core.CoreGame;
-import engine.input.Input;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.net.URL;
-
-@Game(name = "Turtle Doom")
-public class DoomGame extends CoreGame {
-
-    // --- Constants ---
-    private final int RES_SCALE = 4; // Higher = Blockier/Faster (4 = 200 rays)
-    private int RENDER_W;
-    private int RENDER_H;
-    
-    // --- State ---
-    private enum State { LOADING, PLAYING }
-    private State state = State.LOADING;
-    private String loadingStatus = "Initializing...";
-
-    // --- Assets (Fetched via HTTP) ---
-    private BufferedImage gunSprite;
-    private Color[][] gunPixelMap;
-    private int gunW, gunH;
-    private boolean assetsLoaded = false;
-
-    // --- World Map (Accessed as [y][x] / [row][col]) ---
-    private final int[][] worldMap = {
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1},
-        {1,0,1,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1},
-        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-    };
-
-    // --- Player / Camera ---
-    private double posX = 3.5, posY = 3.5;  // Player Position
-    private double dirX = -1, dirY = 0;     // Direction Vector
-    private double planeX = 0, planeY = 0.66; // Camera Plane (FOV)
-    
-    // Input Handling
-    private boolean left, right, forward, back;
+            <div class="example-box">
+                <div class="lang-en">
+                    <p>This simple script draws a glowing circle that follows the mouse.</p>
+                </div>
+                <div class="lang-de">
+                    <p>Dieses einfache Skript zeichnet einen leuchtenden Kreis, der der Maus folgt.</p>
+                </div>
+                
+                <pre><code class="language-java">@Game(name = "Neon Mouse")
+public class NeonFollower extends CoreGame {
+    double x, y;
 
     @Override
     public void start() {
-        RENDER_W = getScreenWidth() / RES_SCALE;
-        RENDER_H = getScreenHeight();
-
-        // Start Background Asset Loader
-        new Thread(this::loadAssets).start();
-    }
-
-    private void loadAssets() {
-        try {
-            loadingStatus = "Connecting to HTTP Source...";
-            
-            // Public domain sprite URL
-            URL gunUrl = new URL("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"); 
-            
-            BufferedImage rawImg = ImageIO.read(gunUrl);
-            
-            // Resize for the game HUD
-            gunW = 128;
-            gunH = 128;
-            gunSprite = new BufferedImage(gunW, gunH, BufferedImage.TYPE_INT_ARGB);
-            Graphics g = gunSprite.getGraphics();
-            g.drawImage(rawImg, 0, 0, gunW, gunH, null);
-            g.dispose();
-
-            // Convert to fast color array
-            gunPixelMap = new Color[gunW][gunH];
-            for(int x=0; x<gunW; x++){
-                for(int y=0; y<gunH; y++){
-                    int argb = gunSprite.getRGB(x, y);
-                    if ((argb >> 24) != 0) { // Check Alpha
-                        gunPixelMap[x][y] = new Color(argb);
-                    } else {
-                        gunPixelMap[x][y] = null; // Transparent
-                    }
-                }
-            }
-
-            loadingStatus = "Assets Downloaded.";
-            Thread.sleep(500); 
-            assetsLoaded = true;
-            state = State.PLAYING;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            loadingStatus = "Download Failed. Using Procedural Assets.";
-            generateProceduralGun();
-            assetsLoaded = true;
-            state = State.PLAYING;
-        }
-    }
-
-    private void generateProceduralGun() {
-        gunW = 60; gunH = 100;
-        gunPixelMap = new Color[gunW][gunH];
-        for(int x=0; x<gunW; x++) {
-            for(int y=0; y<gunH; y++) {
-                gunPixelMap[x][y] = Color.DARK_GRAY;
-            }
-        }
+        setFontSize(20);
     }
 
     @Override
     public void input(Input input) {
-        if (state != State.PLAYING) return;
-
-        double moveSpeed = 0.08;
-        double rotSpeed = 0.05;
-
-        // Rotation
-        if (input.isLeft()) {
-            double oldDirX = dirX;
-            dirX = dirX * Math.cos(rotSpeed) - dirY * Math.sin(rotSpeed);
-            dirY = oldDirX * Math.sin(rotSpeed) + dirY * Math.cos(rotSpeed);
-            double oldPlaneX = planeX;
-            planeX = planeX * Math.cos(rotSpeed) - planeY * Math.sin(rotSpeed);
-            planeY = oldPlaneX * Math.sin(rotSpeed) + planeY * Math.cos(rotSpeed);
-        }
-        if (input.isRight()) {
-            double oldDirX = dirX;
-            dirX = dirX * Math.cos(-rotSpeed) - dirY * Math.sin(-rotSpeed);
-            dirY = oldDirX * Math.sin(-rotSpeed) + dirY * Math.cos(-rotSpeed);
-            double oldPlaneX = planeX;
-            planeX = planeX * Math.cos(-rotSpeed) - planeY * Math.sin(-rotSpeed);
-            planeY = oldPlaneX * Math.sin(-rotSpeed) + planeY * Math.cos(-rotSpeed);
-        }
-
-        // Movement with Collision Detection (Fixed indices [y][x])
-        if (input.isUp() || input.isKey(87)) { // W
-            int nextX = (int)(posX + dirX * moveSpeed);
-            int nextY = (int)(posY + dirY * moveSpeed);
-            if(worldMap[(int)posY][nextX] == 0) posX += dirX * moveSpeed;
-            if(worldMap[nextY][(int)posX] == 0) posY += dirY * moveSpeed;
-        }
-        if (input.isDown() || input.isKey(83)) { // S
-            int nextX = (int)(posX - dirX * moveSpeed);
-            int nextY = (int)(posY - dirY * moveSpeed);
-            if(worldMap[(int)posY][nextX] == 0) posX -= dirX * moveSpeed;
-            if(worldMap[nextY][(int)posX] == 0) posY -= dirY * moveSpeed;
-        }
+        // Move towards mouse
+        x += (input.getMouseX() - x) * 0.1;
+        y += (input.getMouseY() - y) * 0.1;
     }
 
     @Override
     public void draw() {
         clear();
-
-        if (state == State.LOADING) {
-            drawLoadingScreen();
-            return;
-        }
-
-        // 1. Raycasting
-        for (int x = 0; x < RENDER_W; x++) {
-            
-            double cameraX = 2 * x / (double)RENDER_W - 1; 
-            double rayDirX = dirX + planeX * cameraX;
-            double rayDirY = dirY + planeY * cameraX;
-
-            int mapX = (int) posX;
-            int mapY = (int) posY;
-
-            double sideDistX;
-            double sideDistY;
-
-            double deltaDistX = (rayDirX == 0) ? 1e30 : Math.abs(1 / rayDirX);
-            double deltaDistY = (rayDirY == 0) ? 1e30 : Math.abs(1 / rayDirY);
-
-            double perpWallDist;
-            int stepX;
-            int stepY;
-            int hit = 0; 
-            int side = 0; 
-
-            if (rayDirX < 0) {
-                stepX = -1;
-                sideDistX = (posX - mapX) * deltaDistX;
-            } else {
-                stepX = 1;
-                sideDistX = (mapX + 1.0 - posX) * deltaDistX;
-            }
-            if (rayDirY < 0) {
-                stepY = -1;
-                sideDistY = (posY - mapY) * deltaDistY;
-            } else {
-                stepY = 1;
-                sideDistY = (mapY + 1.0 - posY) * deltaDistY;
-            }
-
-            // DDA
-            while (hit == 0) {
-                if (sideDistX < sideDistY) {
-                    sideDistX += deltaDistX;
-                    mapX += stepX;
-                    side = 0;
-                } else {
-                    sideDistY += deltaDistY;
-                    mapY += stepY;
-                    side = 1;
-                }
-                
-                // Bounds Check & Wall Check (Fixed indices [y][x])
-                if (mapX < 0 || mapX >= 20 || mapY < 0 || mapY >= 14) {
-                    hit = 1;
-                } else {
-                    if (worldMap[mapY][mapX] > 0) hit = 1;
-                }
-            }
-
-            if (side == 0) perpWallDist = (sideDistX - deltaDistX);
-            else           perpWallDist = (sideDistY - deltaDistY);
-
-            int lineHeight = (int) (RENDER_H / perpWallDist);
-
-            int drawStart = -lineHeight / 2 + RENDER_H / 2;
-            if (drawStart < 0) drawStart = 0;
-            int drawEnd = lineHeight / 2 + RENDER_H / 2;
-            if (drawEnd >= RENDER_H) drawEnd = RENDER_H - 1;
-
-            // Draw Wall
-            Color wallColor;
-            if (side == 1) wallColor = new Color(150, 0, 0); 
-            else           wallColor = new Color(255, 0, 0); 
-
-            int brightness = (int)(255 - (perpWallDist * 20));
-            if (brightness < 30) brightness = 30;
-            if (brightness > 255) brightness = 255;
-            
-            if (side == 1) wallColor = new Color(brightness/2, 0, 0);
-            else           wallColor = new Color(brightness, 0, 0);
-
-            int screenX = x * RES_SCALE;
-            
-            // Draw Vertical Strip
-            for(int w=0; w<RES_SCALE; w++) {
-                penUp();
-                moveTo((screenX + w) - 400, (drawStart - 300));
-                penDown();
-                color(wallColor);
-                moveTo((screenX + w) - 400, (drawEnd - 300));
-            }
-            
-            // Floor
-            penUp();
-            moveTo((screenX) - 400, (drawEnd - 300));
-            penDown();
-            color(Color.DARK_GRAY);
-            moveTo((screenX) - 400, 300);
-        }
-
-        drawGun();
-        drawMinimap();
-    }
-
-    private void drawLoadingScreen() {
-        drawText("TURTLE DOOM", -150, -50, 5, Color.RED);
-        drawText(loadingStatus.toUpperCase(), -200, 50, 3, Color.WHITE);
         
-        penUp(); moveTo(0, 0); penDown(); color(Color.WHITE);
-        drawSquare(20 + (System.currentTimeMillis() % 10), false);
-    }
-
-    private void drawGun() {
-        if (!assetsLoaded || gunPixelMap == null) return;
+        // Draw Neon Glow
+        color(new Color(0, 255, 255, 100));
+        setThickness(10);
+        moveTo(x, y);
+        drawCircle(40, false);
         
-        int bobX = (int)(Math.sin(System.currentTimeMillis() / 200.0) * 10);
-        int bobY = (int)(Math.abs(Math.sin(System.currentTimeMillis() / 200.0)) * 10);
+        // Draw Core
+        color(Color.WHITE);
+        setThickness(2);
+        drawCircle(40, false);
         
-        // Check input directly for bobbing state
-        // (Simplified check, assumes movement if any keys pressed)
-        // Ideally pass "isMoving" flag from input
-        
-        int startX = -gunW / 2 + bobX;
-        int startY = 300 - gunH - 10 + bobY;
-
-        for(int x=0; x<gunW; x+=2) { 
-            for(int y=0; y<gunH; y+=2) {
-                Color c = gunPixelMap[x][y];
-                if (c != null) {
-                    penUp();
-                    moveTo(startX + x, startY + y);
-                    penDown();
-                    color(c);
-                    drawSquare(3, true);
-                }
-            }
-        }
-    }
-
-    private void drawMinimap() {
-        int mapScale = 5;
-        int offX = -380;
-        int offY = -280;
-
-        // Draw Walls (Fixed indices [y][x])
-        for(int x=0; x<20; x++) {
-            for(int y=0; y<14; y++) {
-                if (worldMap[y][x] == 1) { // Swapped indices here
-                    penUp();
-                    moveTo(offX + x*mapScale, offY + y*mapScale);
-                    penDown();
-                    color(Color.GRAY);
-                    drawSquare(mapScale, true);
-                }
-            }
-        }
-
-        // Draw Player
-        penUp();
-        moveTo(offX + posX*mapScale, offY + posY*mapScale);
-        penDown();
-        color(Color.GREEN);
-        drawSquare(3, true);
-    }
-
-    public void drawText(String text, int x, int y, int scale, Color color) {
-        if (text == null) return;
-        text = text.toUpperCase();
-        int cursorX = x;
-        int spacing = scale;
-        for (char c : text.toCharArray()) {
-            boolean[][] map = getBitmap(c);
-            for (int r = 0; r < map.length; r++) {
-                for (int cIdx = 0; cIdx < map[0].length; cIdx++) {
-                    if (map[r][cIdx]) {
-                        penUp(); moveTo(cursorX + cIdx*scale, y + r*scale);
-                        penDown(); this.color(color); drawSquare(scale, true);
-                    }
-                }
-            }
-            cursorX += (map[0].length * scale) + spacing;
-        }
-    }
-    
-    private boolean[][] getBitmap(char c) {
-        boolean T=true, F=false;
-        switch(c) {
-            case 'T': return new boolean[][]{{T,T,T},{F,T,F},{F,T,F},{F,T,F},{F,T,F}};
-            case 'U': return new boolean[][]{{T,F,T},{T,F,T},{T,F,T},{T,F,T},{T,T,T}};
-            case 'R': return new boolean[][]{{T,T,T},{T,F,T},{T,T,T},{T,F,T},{T,F,T}};
-            case 'L': return new boolean[][]{{T,F,F},{T,F,F},{T,F,F},{T,F,F},{T,T,T}};
-            case 'E': return new boolean[][]{{T,T,T},{T,F,F},{T,T,T},{T,F,F},{T,T,T}};
-            case 'D': return new boolean[][]{{T,T,F},{T,F,T},{T,F,T},{T,F,T},{T,T,F}};
-            case 'O': return new boolean[][]{{F,T,F},{T,F,T},{T,F,T},{T,F,T},{F,T,F}};
-            case 'M': return new boolean[][]{{T,F,T},{T,T,T},{T,F,T},{T,F,T},{T,F,T}};
-            case ' ': return new boolean[][]{{F,F,F},{F,F,F},{F,F,F},{F,F,F},{F,F,F}};
-            case '.': return new boolean[][]{{F},{F},{F},{F},{T}};
-            default: return new boolean[][]{{T,T,T},{T,F,T},{T,F,T},{T,F,T},{T,T,T}};
-        }
-    }
-}
-            </code></pre>
-
-            <h3 class="lang-en">Utility: Loading Images</h3>
-            <h3 class="lang-de">Utility: Bilder laden</h3>
-            <pre><code class="language-java">package my.project.utils; 
-
-package my.project.utils; // Ensure this matches your folder structure
-
-import javax.imageio.ImageIO;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-public class Image {
-
-    /**
-     * Loads an image from the resources folder and converts it into a 2D array of Colors.
-     */
-    public static Color[][] loadPixelMap(String resourcePath) throws IOException {
-        // FIX: Changed "ImageUtils.class" to "Image.class" to match your file name
-        InputStream is = Image.class.getResourceAsStream(resourcePath);
-        
-        if (is == null) {
-            throw new IOException("File not found in resources: " + resourcePath);
-        }
-
-        BufferedImage image = ImageIO.read(is);
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        Color[][] pixelMap = new Color[width][height];
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                int pixel = image.getRGB(x, y);
-                // The 'true' argument tells Java to support transparency (Alpha channel)
-                pixelMap[x][y] = new Color(pixel, true);
-            }
-        }
-
-        return pixelMap;
+        drawText("FOLLOWING MOUSE", -70, 250);
     }
 }</code></pre>
+            </div>
         </section>
 
         <footer style="margin-top:50px; border-top: 1px solid var(--border-color); padding: 20px; text-align: center; opacity: 0.5; font-size: 0.8rem;">
@@ -828,7 +341,7 @@ public class Image {
 
     <script>
         let currentLang = 'en';
-        let currentTheme = 'dark'; // Default request was dark mode
+        let currentTheme = 'dark';
 
         function setActive(element) {
             document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
@@ -856,7 +369,6 @@ public class Image {
             document.body.setAttribute('data-theme', currentTheme);
         }
 
-        // Initialize Highlight.js
         hljs.highlightAll();
     </script>
 </body>
