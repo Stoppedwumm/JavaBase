@@ -1,4 +1,3 @@
-// This shit is anything but tested, all changes here are temporary and might be removed
 package engine.audio;
 
 import javax.sound.sampled.*;
@@ -7,6 +6,25 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <h1>EXPERIMENTAL AUDIO ENGINE</h1>
+ * <p>
+ * <b>WARNING:</b> This class is currently in an experimental state. The API, internal 
+ * implementation, and resource management strategies are not finalized. 
+ * Use this in production-level projects with caution as it may be subject to 
+ * breaking changes or removal in future versions of JavaBase.
+ * </p>
+ * 
+ * <p>Current Limitations:</p>
+ * <ul>
+ *   <li>Only supports 16-bit PCM .WAV files natively.</li>
+ *   <li>The cache grows indefinitely; there is currently no logic to dispose of unused clips.</li>
+ *   <li>Simultaneous playback is limited by the system's available Mixer lines.</li>
+ * </ul>
+ *
+ * @author JavaBase Contributor
+ * @version 0.1-ALPHA
+ */
 public class Audio {
 
     private static final Map<String, Clip> cache = new HashMap<>();
@@ -24,12 +42,14 @@ public class Audio {
                 clip.start();
             }
         } catch (Exception e) {
-            System.err.println("Error playing sound: " + path);
+            System.err.println("Audio Error [SFX]: " + path + " - " + e.getMessage());
         }
     }
 
     /**
      * Plays a file on loop. Only one music track can play at a time.
+     * @param path Path to the file in resources.
+     * @param volume Linear volume scale from 0.0 to 1.0.
      */
     public static void playMusic(String path, float volume) {
         stopMusic();
@@ -41,10 +61,13 @@ public class Audio {
                 backgroundMusic.start();
             }
         } catch (Exception e) {
-            System.err.println("Error playing music: " + path);
+            System.err.println("Audio Error [Music]: " + path + " - " + e.getMessage());
         }
     }
 
+    /**
+     * Stops the currently playing background music track.
+     */
     public static void stopMusic() {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
             backgroundMusic.stop();
@@ -52,14 +75,18 @@ public class Audio {
     }
 
     /**
-     * Adjusts volume of a clip.
-     * @param volume 0.0 to 1.0
+     * Internal helper to convert linear volume to Decibels.
      */
     private static void setVolume(Clip clip, float volume) {
-        if (volume < 0f || volume > 1f) return;
-        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-        float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
-        gainControl.setValue(dB);
+        try {
+            if (volume < 0f) volume = 0f;
+            if (volume > 1f) volume = 1f;
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            gainControl.setValue(dB);
+        } catch (Exception e) {
+            System.err.println("Volume Control not supported on this line.");
+        }
     }
 
     private static Clip getClip(String path) throws Exception {
@@ -68,9 +95,8 @@ public class Audio {
         }
 
         InputStream is = Audio.class.getResourceAsStream(path);
-        if (is == null) throw new RuntimeException("Sound not found: " + path);
+        if (is == null) throw new RuntimeException("Resource not found: " + path);
         
-        // Use BufferedInputStream to support mark/reset required by AudioSystem
         InputStream bufferedIn = new BufferedInputStream(is);
         AudioInputStream audioIn = AudioSystem.getAudioInputStream(bufferedIn);
         
