@@ -19,7 +19,7 @@ import java.util.Map;
  *   <li>The cache grows indefinitely; there is no logic to dispose of unused clips.</li>
  * </ul>
  *
- * @author JavaBase Contributor
+ * @author Stoppedwumm
  * @version 0.1-ALPHA
  */
 public class Audio {
