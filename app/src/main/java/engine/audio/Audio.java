@@ -3,7 +3,7 @@ package engine.audio;
 import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.util.LinkedHashMap; // Added this import
 import java.util.Map;
 
 /**
@@ -16,7 +16,7 @@ import java.util.Map;
  * <p>Current Limitations:</p>
  * <ul>
  *   <li>Only supports 16-bit PCM .WAV files natively.</li>
- *   <li>The cache grows indefinitely; there is no logic to dispose of unused clips.</li>
+ *   <li>The cache grows to a maximum size (LRU), then disposes of old clips.</li>
  * </ul>
  *
  * @author Stoppedwumm
@@ -29,7 +29,26 @@ public class Audio {
      */
     private Audio() {}
 
-    private static final Map<String, Clip> cache = new HashMap<>();
+    private static final int MAX_CACHE_SIZE = 50;
+
+    // Use LinkedHashMap with accessOrder = true for LRU (Least Recently Used) behavior
+    private static final Map<String, Clip> cache = new LinkedHashMap<String, Clip>(16, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Clip> eldest) {
+            if (size() > MAX_CACHE_SIZE) {
+                Clip clip = eldest.getValue();
+                if (clip != null) {
+                    if (clip.isRunning()) {
+                        clip.stop();
+                    }
+                    clip.close(); // Important: Close the line to free system audio resources
+                }
+                return true;
+            }
+            return false;
+        }
+    };
+
     private static Clip backgroundMusic;
 
     /**
@@ -96,13 +115,14 @@ public class Audio {
         InputStream is = Audio.class.getResourceAsStream(path);
         if (is == null) throw new RuntimeException("Resource not found: " + path);
         
-        InputStream bufferedIn = new BufferedInputStream(is);
-        AudioInputStream audioIn = AudioSystem.getAudioInputStream(bufferedIn);
-        
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioIn);
-        
-        cache.put(path, clip);
-        return clip;
+        try (InputStream bufferedIn = new BufferedInputStream(is);
+             AudioInputStream audioIn = AudioSystem.getAudioInputStream(bufferedIn)) {
+            
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            
+            cache.put(path, clip);
+            return clip;
+        }
     }
 }
