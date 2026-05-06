@@ -89,20 +89,21 @@ public class Audio {
     }
 
     private static Clip getClip(String path) throws Exception {
-        if (cache.containsKey(path)) {
-            return cache.get(path);
-        }
+    if (cache.containsKey(path)) {
+        return cache.get(path);
+    }
 
-        InputStream is = Audio.class.getResourceAsStream(path);
-        if (is == null) throw new RuntimeException("Resource not found: " + path);
+    InputStream is = Audio.class.getResourceAsStream(path);
+    if (is == null) throw new RuntimeException("Resource not found: " + path);
     
-        InputStream bufferedIn = new BufferedInputStream(is);
-        AudioInputStream audioIn = AudioSystem.getAudioInputStream(bufferedIn);
-    
+    try (InputStream bufferedIn = new BufferedInputStream(is);
+         AudioInputStream audioIn = AudioSystem.getAudioInputStream(bufferedIn)) {
+        
         Clip clip = AudioSystem.getClip();
         clip.open(audioIn);
-    
+        
         cache.put(path, clip);
         return clip;
     }
+}
 }
