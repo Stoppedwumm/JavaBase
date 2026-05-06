@@ -95,13 +95,13 @@ public class Audio {
 
         InputStream is = Audio.class.getResourceAsStream(path);
         if (is == null) throw new RuntimeException("Resource not found: " + path);
-        
+    
         InputStream bufferedIn = new BufferedInputStream(is);
         AudioInputStream audioIn = AudioSystem.getAudioInputStream(bufferedIn);
-        
+    
         Clip clip = AudioSystem.getClip();
         clip.open(audioIn);
-        
+    
         cache.put(path, clip);
         return clip;
     }
