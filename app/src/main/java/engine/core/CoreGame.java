@@ -5,8 +5,6 @@ import engine.input.Input;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public abstract class CoreGame extends Canvas {
 
