@@ -17,9 +17,6 @@ public class Input {
     
     /** The current y-coordinate of the mouse cursor. */
     private int mouseY;
-    
-    /** Flag indicating whether the mouse button is currently clicked. */
-    private boolean mouseClicked;
 
     /**
      * Creates a new Input instance.
