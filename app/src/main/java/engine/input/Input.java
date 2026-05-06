@@ -45,6 +45,9 @@ public class Input {
      * @return true if the key is pressed, false otherwise
      */
     public boolean isKey(int keyCode) {
+        if (keyCode < 0 || keyCode >= keys.length) {
+            return false;
+        }
         return keys[keyCode];
     }
     
