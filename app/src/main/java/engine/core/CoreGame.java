@@ -123,7 +123,7 @@ public abstract class CoreGame extends Canvas {
         });
 
         MouseAdapter ma = new MouseAdapter() {
-            public void mouseMoved(MouseEvent e) { inputSystem.setMouse(e.getX() - 400, e.getY() - 300); }
+            public void mouseMoved(MouseEvent e) { inputSystem.setMouse(e.getX() - getWidth()/2, e.getY() - getHeight()/2); }
             public void mouseDragged(MouseEvent e) { mouseMoved(e); }
             public void mousePressed(MouseEvent e) { inputSystem.setKey(1000, true); }
             public void mouseReleased(MouseEvent e) { inputSystem.setKey(1000, false); }
