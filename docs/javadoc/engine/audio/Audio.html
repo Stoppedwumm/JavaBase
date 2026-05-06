@@ -100,7 +100,7 @@ loadScripts(document, 'script');</script>
  <p>Current Limitations:</p>
  <ul>
    <li>Only supports 16-bit PCM .WAV files natively.</li>
-   <li>The cache grows indefinitely; there is no logic to dispose of unused clips.</li>
+   <li>The cache grows to a maximum size (LRU), then disposes of old clips.</li>
  </ul></div>
 </section>
 <section class="summary">
