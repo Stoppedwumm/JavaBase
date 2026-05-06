@@ -29,7 +29,20 @@ public class Audio {
      */
     private Audio() {}
 
-    private static final Map<String, Clip> cache = new HashMap<>();
+    private static final int MAX_CACHE_SIZE = 50;
+private static final Map<String, Clip> cache = new LinkedHashMap<String, Clip>(16, 0.75f, true) {
+    @Override
+    protected boolean removeEldestEntry(Map.Entry eldest) {
+        if (size() > MAX_CACHE_SIZE) {
+            Clip clip = (Clip) eldest.getValue();
+            if (clip != null && clip.isRunning()) {
+                clip.stop();
+            }
+            return true;
+        }
+        return false;
+    }
+};
     private static Clip backgroundMusic;
 
     /**
